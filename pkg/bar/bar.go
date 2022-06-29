@@ -192,14 +192,6 @@ func (b *Bar) finish() {
 	}
 }
 
-func (b *Bar) Reset() {
-	b.Lock()
-	defer b.Unlock()
-	b.current = 0
-	b.complete = false
-	b.history = History{}
-}
-
 // render draw the bar to the terminal
 func (b *Bar) render() {
 

@@ -38,12 +38,14 @@ func OptionWithStatsFuncs(f ...StatsFunc) Option {
 	}
 }
 
+// OptionWithLabel sets the label for the bar (displayed to the left)
 func OptionWithLabel(l string) Option {
 	return func(b *Bar) {
 		b.label = l
 	}
 }
 
+// OptionHideOnFinish hides the bar when it is finished
 func OptionHideOnFinish(enabled bool) Option {
 	return func(b *Bar) {
 		b.hideOnFinish = enabled
