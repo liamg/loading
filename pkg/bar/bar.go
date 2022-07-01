@@ -29,12 +29,13 @@ type Bar struct {
 	complete     bool
 	hideOnFinish bool
 	logger       *bytes.Buffer
+	autoComplete bool
 }
 
 // Default creates a loading bar with default settings
 func Default() *Bar {
 	return &Bar{
-		w:          util.NewLineWriter(os.Stdout),
+		w:          util.NewLineWriter(os.Stderr),
 		renderFunc: RenderSimple,
 		statsFuncs: []StatsFunc{
 			StatsPercentComplete,
@@ -44,6 +45,7 @@ func Default() *Bar {
 		},
 		statsPadding: 1,
 		logger:       bytes.NewBuffer(nil),
+		autoComplete: true,
 	}
 }
 
@@ -239,7 +241,7 @@ func (b *Bar) render() {
 	b.linesMoved = b.w.Lines()
 
 	// if we've finished, new line and turn on cursor
-	if b.current == b.total && b.total > 0 {
+	if b.autoComplete && b.current == b.total && b.total > 0 {
 		b.finish()
 	}
 }

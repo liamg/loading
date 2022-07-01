@@ -1,5 +1,11 @@
 package bar
 
+import (
+	"io"
+
+	"github.com/liamg/loading/pkg/util"
+)
+
 // Option is a customisation function that modifies a Bar
 type Option func(b *Bar)
 
@@ -49,5 +55,19 @@ func OptionWithLabel(l string) Option {
 func OptionHideOnFinish(enabled bool) Option {
 	return func(b *Bar) {
 		b.hideOnFinish = enabled
+	}
+}
+
+// OptionWithWriter sets the writer for the bar
+func OptionWithWriter(w io.Writer) Option {
+	return func(b *Bar) {
+		b.w = util.NewLineWriter(w)
+	}
+}
+
+// OptionWithAutoComplete sets whether the bar should automatically complete when the total is reached
+func OptionWithAutoComplete(enabled bool) Option {
+	return func(b *Bar) {
+		b.autoComplete = enabled
 	}
 }
