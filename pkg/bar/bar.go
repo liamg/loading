@@ -218,6 +218,9 @@ func (b *Bar) render() {
 
 	// calculate how much room we have left for the loading bar itself
 	barWidth := termWidth - len(statsBefore) - len(statsAfter) - (b.padding * 2)
+	if barWidth < 0 {
+		barWidth = 0
+	}
 
 	// get the width to draw as filled
 	completeWidth := int(math.Round(completion * float64(barWidth)))
