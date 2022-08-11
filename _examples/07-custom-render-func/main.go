@@ -19,7 +19,11 @@ func main() {
 		bar.OptionWithRenderFunc(func(w io.Writer, current, total int) {
 			all := strings.Repeat("\x1b[93mThis loading bar is very customised. ", 10)
 			_, _ = fmt.Fprint(w, all[:current])
-			_, _ = fmt.Fprint(w, strings.Repeat(" ", total-current))
+			rem := total - current
+			if rem < 0 {
+				rem = 0
+			}
+			_, _ = fmt.Fprint(w, strings.Repeat(" ", rem))
 		}),
 	)
 

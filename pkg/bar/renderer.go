@@ -35,7 +35,9 @@ func RenderColoured(r, g, b int) RenderFunc {
 func RenderCustomCharacters(complete rune, incomplete rune) RenderFunc {
 	return func(w io.Writer, current, total int) {
 		_, _ = w.Write([]byte(strings.Repeat(string(complete), current)))
-		_, _ = w.Write([]byte(strings.Repeat(string(incomplete), total-current)))
+		if total-current > 0 {
+			_, _ = w.Write([]byte(strings.Repeat(string(incomplete), total-current)))
+		}
 	}
 }
 
