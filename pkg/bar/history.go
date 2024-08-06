@@ -16,9 +16,14 @@ func (h History) ETA(total int64) string {
 	if avgRate == 0 {
 		return unknownETA
 	}
-	ms := int64(float64(total-h[len(h)-1].Progress) / avgRate)
-	duration := time.Duration(ms * 1_000_000)
+	latest := h[len(h)-1]
 
+	remaining := total - latest.Progress
+	if remaining <= 0 {
+		return "00m00s"
+	}
+
+	duration := time.Duration(int64(float64(remaining)/avgRate)) * time.Millisecond
 	if duration.Hours() >= 1 {
 		return fmt.Sprintf("%02dh%02dm", int(duration.Hours()), int(duration.Minutes())%60)
 	}
@@ -35,28 +40,14 @@ func (h *History) Push(record Record) {
 }
 
 func (h History) AverageRatePerMS() float64 {
-	var totalRate float64
-	var usefulRates int
-	for i, record := range h {
-		if i == 0 {
-			continue
-		}
-		previous := h[i-1]
-		duration := record.At.Sub(previous.At)
-		if duration.Milliseconds() == 0 {
-			continue
-		}
-		rate := float64(record.Progress-previous.Progress) / float64(duration.Milliseconds())
-		totalRate += rate
-		usefulRates++
-	}
-	if usefulRates == 0 {
+	if len(h) == 0 {
 		return 0
 	}
-	return totalRate / float64(usefulRates)
+	latest := h[len(h)-1]
+	return float64(latest.Progress) / float64(latest.Duration.Milliseconds())
 }
 
 type Record struct {
 	Progress int64
-	At       time.Time
+	Duration time.Duration
 }
