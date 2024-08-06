@@ -13,7 +13,7 @@ const unknownETA = "??m??s"
 
 func (h History) ETA(total int64) string {
 	avgRate := h.AverageRatePerMS()
-	if avgRate == 0 {
+	if avgRate == 0 || total == 0 {
 		return unknownETA
 	}
 	latest := h[len(h)-1]
